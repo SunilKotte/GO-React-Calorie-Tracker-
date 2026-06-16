@@ -8,13 +8,13 @@ import (
 
 	"github.com/SunilKotte/go-react-calorie-tracker-yt/models"
 	"github.com/gin-gonic/gin"
+	validator "github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"k8s.io/apimachinery/pkg/api/validate"
-	"k8s.io/kube-openapi/pkg/validation/validate"
 )
 
+var validate = validator.New()
 var entryCollection *mongo.Collection = OpenCollection(Client, "calories")
 
 func AddEntry(c *gin.Context) {
