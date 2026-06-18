@@ -82,8 +82,27 @@ func GetEntryByID(c *gin.Context) {
 	c.JSON(http.StatusOK, entry)
 }
 
-func GetEntriesByIngredient(c *gin.Context) {
+func UpdateIngredient(c *gin.Context) {
+	entryID := c.Params.ByName("id")
+	docID, _ := primitive.ObjectIDFromHex(entryID)
+	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	type Ingredient struct {
+		Ingredients *string `json:"ingredients"`
+	}
+	var ingredient Ingredient
+	if err := c.BindJSON(&ingredient); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		fmt.Println(err)
+	}
+	result, err := entryCollection.UpdateOne(ctx, bson.M{"_id": docID}, bson.D{{"$set", bson.D{{"ingredients", ingredient.Ingredients}}}})
 
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		fmt.Println(err)
+	}
+
+	c.JSON(http.StatusOK, result.ModifiedCount)
 }
 func UpdateEntry(c *gin.Context) {
 	entryID := c.Params.ByName("id")
@@ -119,9 +138,6 @@ func UpdateEntry(c *gin.Context) {
 	}
 	defer cancel()
 	c.JSON(http.StatusOK, result.ModifiedCount)
-}
-func UpdateIngredient(c *gin.Context) {
-
 }
 func DeleteEntry(c *gin.Context) {
 	entryID := c.Params.ByName("id")

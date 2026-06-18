@@ -22,7 +22,6 @@ func main() {
 
 	router.GET("/entries", routes.GetEntries)
 	router.GET("/entry/:id/", routes.GetEntryByID)
-	router.GET("/ingredient/:ingredient/", routes.GetEntriesByIngredient)
 	router.PUT("/entry/update/:id/", routes.UpdateEntry)
 	router.PUT("/ingredient/update/:id/", routes.UpdateIngredient)
 	router.DELETE("/entry/delete/:id", routes.DeleteEntry)
